@@ -14,7 +14,7 @@
 ### Dependências:
 - stb_image.h
 - stb_image_write.h
-- De: https://github.com/nothings/stb
+	- De: https://github.com/nothings/stb
 
 ### Entrada:
 - Imagem em qualquer formato (.PNG, .BMP, .JPG/.JPEG)
@@ -41,9 +41,9 @@
     - Produz ```<nomeDeSaida>.png``` e ```<nomeDeSaida>.txt```, com modificadores.
 
 ### Modificadores:
-Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiúscula ou minuscula, e, a depender do modificador, um número.
+Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiúscula ou minuscula, e, a depender do modificador, um número. Podem ser usados uma unica vez, em qualquer ordem após a imagem de entrada.
 - -V
-    - Executa o programa em modo 'verbose', mostrando detalhes da imagem, limiar e consumo de tempo (mais devagar).
+    - Executa o programa em modo 'verbose', mostrando detalhes da imagem, limiar e consumo de tempo (mais lento).
 - -T <[0..255]>	
     - Limiar inicial. Se não estiver presente, usa-se o valor padrão (127).
 - -E <[0..255]>	
