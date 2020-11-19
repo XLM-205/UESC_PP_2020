@@ -14,7 +14,7 @@
 ### Dependências:
 - stb_image.h
 - stb_image_write.h
-De: https://github.com/nothings/stb
+- De: https://github.com/nothings/stb
 
 ### Entrada:
 - Imagem em qualquer formato (.PNG, .BMP, .JPG/.JPEG)
