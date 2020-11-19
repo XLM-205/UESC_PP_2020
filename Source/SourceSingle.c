@@ -185,28 +185,6 @@ char *getFilename(const char *fullPath, int *formatIndex, int prefixPadding)
 	return filename;
 }
 
-//Fast Specific Integer Sorting. Requires knowing the 'largest' number and positive integers
-//Kept for maybe future usage
-//void CountingSort(int *v, uint32 size, uint32 largest)
-//{
-//	uint32 stop = largest + 1;
-//	//int *count = new int[stop]();			
-//	int *count = (int*)calloc(stop, sizeof(int));	//Allocates one slot for each integer that can appear (+1 because arrays start at 0)
-//	for (uint32 i = 0; i < size; ++i)				//Count how many times 'v[i]' number appears
-//	{		
-//		count[v[i]]++;		
-//	}
-//	for (uint32 i = 0, j = 0; i < stop; ++i)
-//	{
-//		while (count[i])							//While we still have numbers to subtract from the count...
-//		{		
-//			v[j++] = i;								//...add it to the output and move the index 'j' up...
-//			--count[i];								//...and subtract one from the total of that number
-//		}
-//	}
-//	free(count);
-//}
-
 //Receives the histogram of a grayscaled image and returns a threshold [0..255]
 int computeThreshold(int *histogram)
 {
@@ -423,7 +401,7 @@ void verboseMode(const char *input, const char *output)
 	}
 	filename[fIndex] = 't';	filename[fIndex + 1] = 'x';	filename[fIndex + 2] = 't';						//Changing the format to make a .txt file
 	outF = fopen(filename, "w");
-	fprintf(outF, "%s\n%d\n", input, threshold);
+	fprintf(outF, "%d\n", threshold);
 	for (int i = 0; i < 256; i++)
 	{
 		fprintf(outF, "%d\n", histogram[i]);
