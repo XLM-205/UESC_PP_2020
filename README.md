@@ -47,13 +47,13 @@
 
 ### Modificadores:
 Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiúscula ou minuscula, e, a depender do modificador, um número. Podem ser usados uma unica vez, em qualquer ordem após a imagem de entrada.
-- -I
+- -i
 	- Trata a entrada como sendo uma imagem. Por padrão, a entrada será tratada como um video
-- -V
+- -v
     - Executa o programa em modo 'verbose', mostrando detalhes da imagem, limiar e consumo de tempo (mais lento).
-- -T <[0..255]>	
+- -t <[0..255]>	
     - Limiar inicial. Se não estiver presente, usa-se o valor padrão (127).
-- -E <[0..255]>	
+- -e <[0..255]>	
     - Margem de erro para o calculo do limiar. Define quantas escalas de cinza o limiar pode ter de erro para ser aceito. Se não estiver presente, usa-se o valor padrão (5)
-- -R
+- -r
     - Define o calculo de erro para **'relativo'**. Se não estiver presente, usa-se o modo padrão ('absoluto').
