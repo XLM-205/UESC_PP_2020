@@ -7,6 +7,7 @@
 ### Arquivos Fonte:
 - ```SourceSingle.c``` executa em somente 1 thread
 - ```SourceMulti.c``` executa com partes do código em paralelo
+- ```SourceVideoSingle.cpp``` executa em somente 1 thread com funções para binarização em tempo real de videos
 	
 ### Compilação:
 	gcc -o O3.out -O3 -fopenmp Source.c -lm
@@ -15,14 +16,18 @@
 - stb_image.h
 - stb_image_write.h
 	- De: https://github.com/nothings/stb
+- opencv.hpp e suas .dlls
+	- De: https://github.com/opencv/opencv
 
 ### Entrada:
-- Imagem em qualquer formato (.PNG, .BMP, .JPG/.JPEG)
+- Imagem em qualquer formato (.PNG, .BMP, .JPG/.JPEG) OU
+- Video em formato .MP4 (Atualmente unico formato testado)
 
 ### Saída:
-- Imagem binarizada da entrada e um arquivo .txt com o limiar e histograma em escala de cinza.
+- Imagem binarizada da entrada e um arquivo .txt com o limiar e histograma em escala de cinza. OU
     - Se for dado um nome para a saída, ambos arquivos terão esse nome
     - Se **não** for dado um nome, produzirá ```BINA_<nomeDaImagem>.png``` e ```HIST_<nomeDaImagem>.txt```
+- Video binarizado em tempo real (Arquivo de video binarizado futuramente)
 
 ### Formatação do Arquivo de Histograma
 - 258 linhas de texto, seguindo a ordem:
@@ -42,6 +47,8 @@
 
 ### Modificadores:
 Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiúscula ou minuscula, e, a depender do modificador, um número. Podem ser usados uma unica vez, em qualquer ordem após a imagem de entrada.
+- -I
+	- Trata a entrada como sendo uma imagem. Por padrão, a entrada será tratada como um video
 - -V
     - Executa o programa em modo 'verbose', mostrando detalhes da imagem, limiar e consumo de tempo (mais lento).
 - -T <[0..255]>	
