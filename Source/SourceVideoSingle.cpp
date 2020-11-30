@@ -5,18 +5,20 @@
 #include <math.h>
 #include <omp.h>
 
+//#include <Control/CustomTypes-SA.h>
+
 #define CONSOLE_PAUSE (void)getchar();
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../Dependencies/stb_image.h"			//Image Reading
-#include "../Dependencies/stb_image_write.h"	//Image Writing	
+#include "../Dependencies/stb_image_write.h"	//Image Writing
 
 #include <opencv2/opencv.hpp>
 
 typedef unsigned char uint8;
 typedef unsigned int uint32;
-typedef unsigned long long int uint64;
+typedef unsigned long long int uint64T;
 
 //#define MAKE_BMP	//Un-comment if you want the target image to be a .bmp
 
@@ -44,6 +46,8 @@ typedef unsigned long long int uint64;
 #include <Windows.h>
 #define CONSOLE_CLEAR {static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); std::cout.flush(); COORD rst = {0,0}; SetConsoleCursorPosition(hOut, rst);}
 #endif
+
+//#define DEBUG_PATH "D:/GPX/Testing Folder/ParalellProcessing2020/x64/Release MxP/01.mp4"
 
 //Flags
 bool g_isDefaultName = true;	//If 1, the user didn't provided an output name. Use the input name for output with 'BIN_' and 'HIST_' for the files. Default is TRUE (1)
@@ -206,8 +210,8 @@ char *getFilename(const char *fullPath, int *formatIndex, int prefixPadding)
 int computeThreshold(int *histogram)
 {
 	int l0 = g_initialL0, l1 = 0;		//Initial threshold (guess) and temporary threshold
-	uint64 sumMx, sumMn;				//Sum of pixels that exceeds the threshold and those that doesn't
-	uint64 contMx, contMn;				//Amout of pixels that exceeds the threshold and those that doesn't
+	uint64T sumMx, sumMn;				//Sum of pixels that exceeds the threshold and those that doesn't
+	uint64T contMx, contMn;				//Amout of pixels that exceeds the threshold and those that doesn't
 	int dif = g_initialL0;
 	do {
 		contMx = contMn = sumMx = sumMn = 0;
@@ -386,7 +390,7 @@ int videoRead(const char *input)
 
 int videoReadVerbose(const char *input)
 {
-	uint64 tClock = clock();
+	uint64T tClock = clock();
 	int fRate = 0;
 	cv::VideoCapture vid(input);
 	cv::Mat frame;

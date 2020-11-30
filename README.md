@@ -9,21 +9,26 @@
 - ```SourceMulti.c``` executa com partes do código em paralelo
 - ```SourceVideoSingle.cpp``` executa em somente 1 thread com funções para binarização em tempo real de videos
 	
-### Compilação:
+### Compilação do SourceSingle.c e SourceMulti.c:
 	gcc -o O3.out -O3 -fopenmp SourceSingle.c -lm
-	gcc -o O3.out -O3 -fopenmp SourceMulti.c -lm
-	Compilação para o SourceVideoSingle.cpp pendente
 	
+### Compilação do SourceVideoSingle.cpp:
+	Execute o arquivo bash "compileVideo.sh"
+
 ### Dependências:
 - stb_image.h
 - stb_image_write.h
 	- De: https://github.com/nothings/stb
 - opencv.hpp e suas .dlls
 	- De: https://github.com/opencv/opencv
+	
+	A configuração do openCV pode ser trabalhosa e tediosa. 
+	Por conta disso, há um arquivo para facilitar. Execute no bash o Shell Script: openCVSetup.sh
+	Note que ele irá baixar e compilar o openCV. Isso pode levar algum tempo.
 
 ### Entrada:
 - Imagem em qualquer formato (.PNG, .BMP, .JPG/.JPEG) OU
-- Video em formato .MP4 (Atualmente unico formato testado)
+- Video em formato .MP4 ou .MOV(Atualmente unicos formatos testados)
 
 ### Saída:
 - Imagem binarizada da entrada e um arquivo .txt com o limiar e histograma em escala de cinza. OU
@@ -59,3 +64,9 @@ Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiú
     - Margem de erro para o calculo do limiar. Define quantas escalas de cinza o limiar pode ter de erro para ser aceito. Se não estiver presente, usa-se o valor padrão (5)
 - -r
     - Define o calculo de erro para **'relativo'**. Se não estiver presente, usa-se o modo padrão ('absoluto').
+    
+    
+### Exemplos de uso:
+
+	SingleVideo videoteste.mp4		Mostra uma janela em tempo real do video sendo binarizado.
+	SingleVideo -i teste.png		Cria uma imagem binarizada a partir de teste.png.
