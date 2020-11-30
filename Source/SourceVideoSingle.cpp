@@ -9,8 +9,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "Dependencies/stb_image.h"			//Image Reading
-#include "Dependencies/stb_image_write.h"	//Image Writing	
+#include "../Dependencies/stb_image.h"			//Image Reading
+#include "../Dependencies/stb_image_write.h"	//Image Writing	
 
 #include <opencv2/opencv.hpp>
 
