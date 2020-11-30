@@ -5,14 +5,12 @@
 #include <math.h>
 #include <omp.h>
 
-#include <Control/CustomTypes-SA.h>
-
 #define CONSOLE_PAUSE (void)getchar();
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image.h"			//Image Reading
-#include "stb_image_write.h"	//Image Writing	
+#include "Dependencies/stb_image.h"			//Image Reading
+#include "Dependencies/stb_image_write.h"	//Image Writing	
 
 #include <opencv2/opencv.hpp>
 
@@ -46,8 +44,6 @@ typedef unsigned long long int uint64;
 #include <Windows.h>
 #define CONSOLE_CLEAR {static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); std::cout.flush(); COORD rst = {0,0}; SetConsoleCursorPosition(hOut, rst);}
 #endif
-
-#define DEBUG_PATH "D:/GPX/Testing Folder/ParalellProcessing2020/x64/Release MxP/01.mp4"
 
 //Flags
 bool g_isDefaultName = true;	//If 1, the user didn't provided an output name. Use the input name for output with 'BIN_' and 'HIST_' for the files. Default is TRUE (1)

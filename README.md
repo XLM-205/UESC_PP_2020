@@ -10,8 +10,10 @@
 - ```SourceVideoSingle.cpp``` executa em somente 1 thread com funções para binarização em tempo real de videos
 	
 ### Compilação:
-	gcc -o O3.out -O3 -fopenmp Source.c -lm
-
+	gcc -o O3.out -O3 -fopenmp SourceSingle.c -lm
+	gcc -o O3.out -O3 -fopenmp SourceMulti.c -lm
+	Compilação para o SourceVideoSingle.cpp pendente
+	
 ### Dependências:
 - stb_image.h
 - stb_image_write.h
