@@ -5,20 +5,19 @@
 #include <math.h>
 #include <omp.h>
 
-//#include <Control/CustomTypes-SA.h>
-
 #define CONSOLE_PAUSE (void)getchar();
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../Dependencies/stb_image.h"			//Image Reading
-#include "../Dependencies/stb_image_write.h"	//Image Writing
+#include "../Dependencies/stb_image_write.h"	//Image Writing	
 
 #include <opencv2/opencv.hpp>
+#include <Control/DataTypes.h>
 
 typedef unsigned char uint8;
 typedef unsigned int uint32;
-typedef unsigned long long int uint64T;
+typedef unsigned long long int uint64;
 
 //#define MAKE_BMP	//Un-comment if you want the target image to be a .bmp
 
@@ -46,8 +45,6 @@ typedef unsigned long long int uint64T;
 #include <Windows.h>
 #define CONSOLE_CLEAR {static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); std::cout.flush(); COORD rst = {0,0}; SetConsoleCursorPosition(hOut, rst);}
 #endif
-
-//#define DEBUG_PATH "D:/GPX/Testing Folder/ParalellProcessing2020/x64/Release MxP/01.mp4"
 
 //Flags
 bool g_isDefaultName = true;	//If 1, the user didn't provided an output name. Use the input name for output with 'BIN_' and 'HIST_' for the files. Default is TRUE (1)
@@ -210,8 +207,8 @@ char *getFilename(const char *fullPath, int *formatIndex, int prefixPadding)
 int computeThreshold(int *histogram)
 {
 	int l0 = g_initialL0, l1 = 0;		//Initial threshold (guess) and temporary threshold
-	uint64T sumMx, sumMn;				//Sum of pixels that exceeds the threshold and those that doesn't
-	uint64T contMx, contMn;				//Amout of pixels that exceeds the threshold and those that doesn't
+	uint64 sumMx, sumMn;				//Sum of pixels that exceeds the threshold and those that doesn't
+	uint64 contMx, contMn;				//Amout of pixels that exceeds the threshold and those that doesn't
 	int dif = g_initialL0;
 	do {
 		contMx = contMn = sumMx = sumMn = 0;
@@ -225,6 +222,7 @@ int computeThreshold(int *histogram)
 			sumMx += histogram[i] * i;
 			contMx += histogram[i];
 		}
+//We might be able to optmize this
 		if(!contMx || !contMn)			//Return 0 if either 'contMx' or 'contMn' are 0
 		{
 			return 0;
@@ -241,11 +239,9 @@ int computeThreshold(int *histogram)
 	return l1;
 }
 
-void binarizeVideo(cv::Mat *frame)
+void binarizeVideo(cv::Mat *frame, int range, uint8 *grayScale, int *histogram)
 {
-	int range = frame->cols * frame->rows, threshold = 0;
-	uint8 *grayScale = (uint8*)malloc(range);			//The pixel computed grayscale
-	int *histogram = (int*)calloc(256, sizeof(int));	//The histogram
+	int threshold = 0;
 	for(int i = 0; i < frame->rows; i++)
 	{
 		int line = i * frame->cols;
@@ -272,8 +268,6 @@ void binarizeVideo(cv::Mat *frame)
 			frame->at<cv::Vec3b>(i, j) = gPixel;
 		}
 	}
-	free(histogram);
-	free(grayScale);
 }
 
 void binarizeVideoVerbose(cv::Mat *frame, int frameID, int frameRate)
@@ -367,30 +361,53 @@ int videoRead(const char *input)
 		printf("[ERROR] Couldn't open video file!\n");
 		return -1;
 	}
-	while(true)
+	int vidWidth = (int)vid.get(cv::CAP_PROP_FRAME_WIDTH), vidHeight = vid.get(cv::CAP_PROP_FRAME_HEIGHT);
+	double vidFPS = vid.get(cv::CAP_PROP_FPS);
+	cv::VideoWriter outVid("out.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), vidFPS, cv::Size(vidWidth, vidHeight));
+	printf("Conversion of %s started\n> %4d x %4d @%6.2lf FPS\n", input, vidWidth, vidHeight, vidFPS);
+	int range = vidWidth * vidHeight;
+	double timer = omp_get_wtime();
+	uint8 *grayScale = (uint8*)malloc(range);			//The pixel computed grayscale
+	int *histogram = (int*)calloc(256, sizeof(int));	//The histogram
+	vid >> frame;
+	while(!frame.empty())
 	{
+		//if(frame.empty())
+		//{
+		//	printf("EOF Reached\n");
+		//	break;
+		//}
+		//if(cv::waitKey(25) == 27)		//Stop if the user press ESC
+		//{
+		//	printf("Execution stopped by User\n");
+		//	break;
+		//}
+		binarizeVideo(&frame, range, grayScale, histogram);
+		outVid << frame;
+		//cv::imshow("Press ESC to close", frame);	//Only available on Verbose
 		vid >> frame;
-		if(frame.empty())
+		for(int j = 0; j < 256; ++j)
 		{
-			printf("EOF Reached\n");
-			break;
+			histogram[j] = 0;
 		}
-		if(cv::waitKey(25) == 27)		//Stop if the user press ESC
-		{
-			printf("Execution stopped by User\n");
-			break;
-		}
-		binarizeVideo(&frame);
-		cv::imshow("Press ESC to close", frame);
 	}
+	timer = omp_get_wtime() - timer;
+	double videoSeconds = vid.get(cv::CAP_PROP_FRAME_COUNT) / vidFPS;
+	printf("Time took   : %12.8lf seconds\n", timer);
+	printf("Video lenght: %12.8lf seconds\n", videoSeconds);
+	printf("Gain        : %12.8lf seconds (%6.2lf%%)\n", videoSeconds - timer, (videoSeconds / timer) * 100);
+	free(histogram);
+	free(grayScale);
+	outVid.release();
 	vid.release();
 	cv::destroyAllWindows();
 	return 0;
 }
 
+//Update to match 'fastMode'
 int videoReadVerbose(const char *input)
 {
-	uint64T tClock = clock();
+	uint64 tClock = clock();
 	int fRate = 0;
 	cv::VideoCapture vid(input);
 	cv::Mat frame;
@@ -402,6 +419,7 @@ int videoReadVerbose(const char *input)
 #ifndef __linux__
 	system("cls");	//Remove everything from the console
 #endif
+	printf("WARNING: VERBOSE MODE IS NOT UP TO DATE WITH FAST MODE!\n");
 	for(int i = 1, framesPS = 0; true; i++, framesPS++)
 	{
 		vid >> frame;
