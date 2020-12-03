@@ -194,16 +194,16 @@ char *getFilename(const char *fullPath, int *formatIndex, int prefixPadding)
 			nameStartIndex = i + 1;
 			outLen = 0;
 		}
-		if(fullPath[i] == '.')
-		{
-			*formatIndex = i + prefixPadding + 1;
-		}
 	}
 	outLen += prefixPadding;
 	filename = (char *)malloc(outLen + 1);
 	for (i = nameStartIndex, j = prefixPadding; fullPath[i]; i++, j++)
 	{
 		filename[j] = fullPath[i];
+		if(fullPath[i] == '.')
+		{
+			*formatIndex = j + 1;
+		}
 	}
 	filename[outLen] = '\0';
 	return filename;
@@ -349,7 +349,6 @@ void binarizeVideoVerbose(cv::Mat *frame, int range, int framesTotal, uint8R *gr
 int videoReadParallel(const char *input, const char *output)
 {
 	cv::VideoCapture vid(input);
-	cv::Mat frame;
 	int formatIndex = 0;
 	char *filename = (char*)output;
 	if(g_isDefaultName)	//If the users didn't provided a name, place 'BINA_' on the input name and make it .avi (default)
@@ -381,7 +380,7 @@ int videoReadParallel(const char *input, const char *output)
 #endif
 	//Creating a common buffer for each thread so that we don't need to alloc / dealloc memory everytime
 	uint8R **grayScale = (uint8R**)malloc(g_avThreads * sizeof(uint8R*));
-	int **hist = (int**)malloc(256 * sizeof(int*));
+	int **hist = (int**)malloc(g_avThreads * sizeof(int*));
 	for(int i = 0; i < g_avThreads; i++)
 	{
 		grayScale[i] = (uint8R*)malloc(range);
@@ -433,8 +432,8 @@ int videoReadParallel(const char *input, const char *output)
 	double vidM  = fabs(((int)(vidH) - vidH) * 60);
 	double vidS  = fabs(((int)(vidM) - vidM) * 60);
 	int vidMS	 = (int)fabs(((int)(vidS) - vidS) * 1000);
-	printf("\tTime took   : %15.8lf seconds (%2dh: %2dm: %2ds: %4dms)\n", timer, (int)outH, (int)outM, (int)outS, outMS);
-	printf("\tVideo lenght: %15.8lf seconds (%2dh: %2dm: %2ds: %4dms)\n", videoSeconds, (int)vidH, (int)vidM, (int)vidS, vidMS);
+	printf("        Time took   : %15.8lf seconds (%2dh: %2dm: %2ds: %4dms)\n", timer, (int)outH, (int)outM, (int)outS, outMS);
+	printf("        Video lenght: %15.8lf seconds (%2dh: %2dm: %2ds: %4dms)\n", videoSeconds, (int)vidH, (int)vidM, (int)vidS, vidMS);
 #endif
 	//Cleanup step
 	for(int i = 0; i < g_avThreads; i++)
@@ -532,7 +531,6 @@ int videoReadVerboseParallel(const char *input, const char *output)
 	int vidWidth = (int)vid.get(cv::CAP_PROP_FRAME_WIDTH), vidHeight = (int)vid.get(cv::CAP_PROP_FRAME_HEIGHT);
 	int range = vidWidth * vidHeight;
 	cv::VideoWriter outVid(filename, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), vidFPS, cv::Size(vidWidth, vidHeight));
-	cv::Mat *frames = new cv::Mat[g_qSize];
 
 #ifndef __linux__
 	system("cls");	//Remove everything from the console
