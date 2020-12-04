@@ -867,7 +867,7 @@ return -2;
 				break;
 			case 'q':	//Setting Video Queue Size
 			case 'Q':
-				if(++i >= argc || !sscanf(argv[i], "%d", &g_qSize) || g_qSize < 0)
+				if(++i >= argc || !sscanf(argv[i], "%d", &g_qSize) || g_qSize < 1)
 				{
 					printf("[ERROR] Invalid or absent Queue Size value but flag was raised! Operation aborted");
 					return -1;

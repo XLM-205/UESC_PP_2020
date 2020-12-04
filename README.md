@@ -1,11 +1,10 @@
-
 # Binarizador de Imagem
 ### Grupo:
 - Swami de Paula Lima
 - Ramon Darwich de Menezes
 
 ### Arquivo Fonte:
-- ```Source.cpp``` executa em paralelo com funções para binarização em tempo real e escrita de videos e imagens
+- ```Source.cpp``` executa em paralelo com funções para binarização em tempo real e escrita de videos e imagens.
 	
 ### Compilação dos Prototipos SourceSingle.c e SourceMulti.c:
 	gcc -o O3.out -O3 -fopenmp SourceSingle.c -lm
@@ -27,16 +26,16 @@
 	Note que ele irá baixar e compilar o openCV. Isso pode levar algum tempo.
 
 ### Entrada:
-- Imagem ou Video em qualquer formato
+- Imagem ou Video em qualquer formato.
 
 ### Saída:
 - Video binarizado:
-	- Se no modo 'verbose', em tempo real
-	- Se for dado um nome para a saída, um arquivo .avi com esse nome
-	- Se **não** for dado um nome, produzirá ```BINA_<nomeDoVideo>.avi```
+	- Se no modo 'verbose', em tempo real.
+	- Se for dado um nome para a saída, um arquivo .avi com esse nome.
+	- Se **não** for dado um nome, produzirá ```BINA_<nomeDoVideo>.avi```.
 - Imagem binarizada da entrada e um arquivo .txt com o limiar e histograma em escala de cinza. OU
-    - Se for dado um nome para a saída, ambos arquivos terão esse nome
-    - Se **não** for dado um nome, produzirá ```BINA_<nomeDaImagem>.png``` e ```HIST_<nomeDaImagem>.txt```
+    - Se for dado um nome para a saída, ambos arquivos terão esse nome.
+    - Se **não** for dado um nome, produzirá ```BINA_<nomeDaImagem>.png``` e ```HIST_<nomeDaImagem>.txt```.
 
 ### Formatação do Arquivo de Histograma para Imagens
 - 258 linhas de texto, seguindo a ordem:
@@ -56,22 +55,22 @@
 
 ### Modificadores:
 Todos os modificadores são especificados com '-' ou '/', uma letra-chave, maiúscula ou minuscula, e, a depender do modificador, um número. Podem ser usados uma unica vez, em qualquer ordem após a imagem de entrada.
-- -h
-	- Mostra os modificadores disponiveis. Se usado, o programa será encerrado. **Precisa ser chamado como sendo o unico argumento**. Se usado depois, será ignorado
-- -i
-	- Trata a entrada como sendo uma imagem. Por padrão, a entrada será tratada como um video
-- -v
+- -H
+	- Mostra os modificadores disponiveis. Se usado, o programa será encerrado. **Precisa ser chamado como sendo o unico argumento**. Se usado depois, será ignorado.
+- -I
+	- Trata a entrada como sendo uma imagem. Por padrão, a entrada será tratada como um video.
+- -V
     - Executa o programa em modo 'verbose', mostrando detalhes da imagem ou video, limiar e consumo de tempo (mais lento).
-	- **Nota: O modo 'verbose' para videos NÃO produz arquivo de saida e roda em uma unica thread**
-- -l <[0..255]>	
+	- **Nota: O modo 'verbose' para videos NÃO produz arquivo de saida e roda em uma unica thread.**
+- -L <[0..255]>	
     - Limiar inicial. Se não estiver presente, usa-se o valor padrão (127).
-- -t
+- -T <[1..Max do Sistema]>
 	- Define quantas threads o programa vai usar. Se for definido um numero maior que o maximo do sistema, ele será alterado para o maximo disponivel. Se não estiver presente, usa-se o valor padrão (Maximo disponivel do Sistema).
-- -e <[0..255]>	
+- -E <[0..255]>	
     - Margem de erro para o calculo do limiar. Define quantas escalas de cinza o limiar pode ter de erro para ser aceito. Se não estiver presente, usa-se o valor padrão (5).
-- -q
+- -Q <[1..X]>
 	- Define o tamanho da fila de leitura. Valores altos que sejam multiplos da quantidade de threads disponiveis se mostraram mais eficazes. Se não estiver presente, usa-se o valor padrão (120).
-- -r
+- -R
     - Define o calculo de erro para **'relativo'**. Se não estiver presente, usa-se o modo padrão ('absoluto').
     
     
